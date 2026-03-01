@@ -1,7 +1,3 @@
-// Initialize Supabase
-const { createClient } = supabase;
-const supabaseClient = createClient(CONFIG.supabase.url, CONFIG.supabase.anonKey);
-
 // Handle CV Upload and Extract with Claude
 let cvData = null;
 
