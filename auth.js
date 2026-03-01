@@ -1,12 +1,13 @@
 // Initialize Supabase
-const supabase = supabase.createClient(CONFIG.supabase.url, CONFIG.supabase.anonKey);
+const { createClient } = supabase;
+const supabaseClient = createClient(CONFIG.supabase.url, CONFIG.supabase.anonKey);
 
 // Check if user is already logged in
 async function checkAuth() {
-  const { data: { session } } = await supabase.auth.getSession();
+  const { data: { session } } = await supabaseClient.auth.getSession();
   if (session) {
     // Check if user has completed onboarding
-    const { data: profile } = await supabase
+    const { data: profile } = await supabaseClient
       .from('profiles')
       .select('*')
       .eq('user_id', session.user.id)
@@ -50,7 +51,7 @@ async function login() {
     return;
   }
   
-  const { data, error } = await supabase.auth.signInWithPassword({
+  const { data, error } = await supabaseClient.auth.signInWithPassword({
     email,
     password
   });
@@ -59,7 +60,7 @@ async function login() {
     errorEl.textContent = error.message;
   } else {
     // Check if profile exists and is complete
-    const { data: profile } = await supabase
+    const { data: profile } = await supabaseClient
       .from('profiles')
       .select('*')
       .eq('user_id', data.user.id)
@@ -90,7 +91,7 @@ async function signup() {
     return;
   }
   
-  const { data, error } = await supabase.auth.signUp({
+  const { data, error } = await supabaseClient.auth.signUp({
     email,
     password,
     options: {
@@ -104,7 +105,7 @@ async function signup() {
     errorEl.textContent = error.message;
   } else {
     // Create profile entry
-    const { error: profileError } = await supabase
+    const { error: profileError } = await supabaseClient
       .from('profiles')
       .insert([{
         user_id: data.user.id,
@@ -122,7 +123,7 @@ async function signup() {
 
 // Logout
 async function logout() {
-  await supabase.auth.signOut();
+  await supabaseClient.auth.signOut();
   window.location.href = 'index.html';
 }
 
