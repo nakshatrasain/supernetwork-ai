@@ -1,3 +1,7 @@
+// Initialize Supabase
+const { createClient } = supabase;
+const supabaseClient = createClient(CONFIG.supabase.url, CONFIG.supabase.anonKey);
+
 let currentUser = null;
 let conversations = [];
 let activeConversation = null;
@@ -5,14 +9,14 @@ let allProfiles = [];
 
 // Initialize
 async function init() {
-  const { data: { session } } = await supabase.auth.getSession();
+  const { data: { session } } = await supabaseClient.auth.getSession();
   if (!session) {
     window.location.href = 'index.html';
     return;
   }
 
   // Get current user profile
-  const { data: profile } = await supabase
+  const { data: profile } = await supabaseClient
     .from('profiles')
     .select('*')
     .eq('user_id', session.user.id)
@@ -21,7 +25,7 @@ async function init() {
   currentUser = profile;
 
   // Load all profiles for lookup
-  const { data: profiles } = await supabase
+  const { data: profiles } = await supabaseClient
     .from('profiles')
     .select('*');
   
@@ -37,7 +41,7 @@ async function init() {
 // Load Conversations
 async function loadConversations() {
   // Get all messages where user is sender or receiver
-  const { data: messages } = await supabase
+  const { data: messages } = await supabaseClient
     .from('messages')
     .select('*')
     .or(`from_user_id.eq.${currentUser.id},to_user_id.eq.${currentUser.id}`)
@@ -113,7 +117,7 @@ async function selectConversation(partnerId, partnerName) {
   await loadMessages(partnerId);
 
   // Mark messages as read
-  await supabase
+  await supabaseClient
     .from('messages')
     .update({ read: true })
     .eq('from_user_id', partnerId)
@@ -122,7 +126,7 @@ async function selectConversation(partnerId, partnerName) {
 
 // Load Messages
 async function loadMessages(partnerId) {
-  const { data: messages } = await supabase
+  const { data: messages } = await supabaseClient
     .from('messages')
     .select('*')
     .or(`and(from_user_id.eq.${currentUser.id},to_user_id.eq.${partnerId}),and(from_user_id.eq.${partnerId},to_user_id.eq.${currentUser.id})`)
@@ -163,7 +167,7 @@ async function sendMessage() {
   if (!message || !activeConversation) return;
 
   try {
-    const { error } = await supabase
+    const { error } = await supabaseClient
       .from('messages')
       .insert([{
         from_user_id: currentUser.id,
@@ -189,7 +193,7 @@ async function sendMessage() {
 
 // Setup Realtime Subscription
 function setupRealtimeSubscription() {
-  supabase
+  supabaseClient
     .channel('messages')
     .on('postgres_changes', 
       { 
