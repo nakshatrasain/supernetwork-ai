@@ -42,7 +42,7 @@ Return ONLY valid JSON array with this structure (return top 10 matches):
 Important: 
 - match_score should be 0-100 based on relevance to search query
 - explanation should be specific and personalized
-- Only include matches with score > 60`;
+- Only include matches with score > 30`;
     } else {
       // suggestions
       prompt = `Suggest the top 6 best matches for this person based on their profile and matching criteria.
