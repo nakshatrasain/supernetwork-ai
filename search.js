@@ -30,13 +30,22 @@ async function init() {
 async function loadAllProfiles() {
   const { data: { session } } = await supabaseClient.auth.getSession();
   
+  // Get blocked users
+  const { data: blockedUsers } = await supabaseClient
+    .from('blocked_users')
+    .select('blocked_user_id')
+    .eq('user_id', currentUser.id);
+  
+  const blockedIds = blockedUsers ? blockedUsers.map(b => b.blocked_user_id) : [];
+  
   const { data: profiles } = await supabaseClient
     .from('profiles')
     .select('*')
     .eq('visibility', 'public')
     .neq('user_id', session.user.id);
   
-  allProfiles = profiles || [];
+  // Filter out blocked users
+  allProfiles = profiles ? profiles.filter(p => !blockedIds.includes(p.id)) : [];
 }
 
 // Toggle Filter
@@ -209,6 +218,9 @@ function createMatchCard(profile, match) {
         <button class="btn-secondary" onclick="viewProfile('${profile.id}')">
           View Profile
         </button>
+        <button class="btn-secondary" onclick="blockUser('${profile.id}', '${profile.name}')" style="background: #e74c3c; color: white;">
+          🚫 Block
+        </button>
       </div>
     </div>
   `;
@@ -283,6 +295,41 @@ Ikigai:
   `;
   
   alert(info);
+}
+
+// Block User
+async function blockUser(profileId, name) {
+  if (!confirm(`Are you sure you want to block ${name}? You won't see their profile or receive messages from them.`)) {
+    return;
+  }
+
+  try {
+    if (!currentUser || !currentUser.id) {
+      alert('Error: User profile not loaded. Please refresh the page.');
+      return;
+    }
+
+    // Insert into blocked_users table
+    const { error } = await supabaseClient
+      .from('blocked_users')
+      .insert([{
+        user_id: currentUser.id,
+        blocked_user_id: profileId
+      }]);
+
+    if (error) {
+      console.error('Block error:', error);
+      throw error;
+    }
+
+    alert(`${name} has been blocked. Refreshing matches...`);
+    
+    // Reload page to remove blocked user from results
+    window.location.reload();
+  } catch (error) {
+    console.error('Block error:', error);
+    alert('Error blocking user: ' + error.message);
+  }
 }
 
 // Initialize on page load
