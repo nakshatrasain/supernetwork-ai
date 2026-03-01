@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile - SuperNetworkAI</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <div class="nav">
+      <div class="nav-logo">SuperNetworkAI</div>
+      <div class="nav-links">
+        <a href="search.html">Search</a>
+        <a href="messages.html">Messages</a>
+        <a href="profile.html">Profile</a>
+        <a href="#" onclick="logout()">Logout</a>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="profile-header">
+        <h1>Your Profile</h1>
+        <div class="visibility-toggle">
+          <label>Profile Visibility:</label>
+          <select id="visibilityToggle" onchange="updateVisibility()">
+            <option value="public">Public (Visible to everyone)</option>
+            <option value="private">Private (Hidden from search)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Basic Info Section -->
+      <div class="profile-section">
+        <h3>Basic Information</h3>
+        <div style="display: grid; gap: 15px;">
+          <div>
+            <label>Name</label>
+            <input type="text" id="name" placeholder="Your name">
+          </div>
+          <div>
+            <label>Email</label>
+            <input type="email" id="email" disabled style="background: #f5f5f5;">
+          </div>
+          <div>
+            <label>Location</label>
+            <input type="text" id="location" placeholder="City, Country">
+          </div>
+        </div>
+      </div>
+
+      <!-- Ikigai Section -->
+      <div class="profile-section">
+        <h3>Your Ikigai</h3>
+        <div class="ikigai-grid">
+          <div>
+            <label>What you LOVE</label>
+            <textarea id="ikigaiLove" rows="3"></textarea>
+          </div>
+          <div>
+            <label>What you're GOOD AT</label>
+            <textarea id="ikigaiGoodAt" rows="3"></textarea>
+          </div>
+          <div>
+            <label>What the WORLD NEEDS</label>
+            <textarea id="ikigaiWorldNeeds" rows="3"></textarea>
+          </div>
+          <div>
+            <label>What you can be PAID FOR</label>
+            <textarea id="ikigaiPaidFor" rows="3"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Professional Info Section -->
+      <div class="profile-section">
+        <h3>Professional Information</h3>
+        <div style="display: grid; gap: 15px;">
+          <div>
+            <label>Primary Intent</label>
+            <select id="intent">
+              <option value="seeking_cofounder">Seeking Cofounder</option>
+              <option value="seeking_client">Seeking Client</option>
+              <option value="seeking_teammate">Seeking Teammate</option>
+              <option value="offering_services">Offering Services</option>
+            </select>
+          </div>
+          <div>
+            <label>Skills (comma-separated)</label>
+            <input type="text" id="skills" placeholder="JavaScript, Marketing, AI">
+          </div>
+          <div>
+            <label>Availability</label>
+            <select id="availability">
+              <option value="full_time">Full-time</option>
+              <option value="part_time">Part-time</option>
+              <option value="weekends">Weekends only</option>
+              <option value="flexible">Flexible</option>
+            </select>
+          </div>
+          <div>
+            <label>Working Style</label>
+            <select id="workingStyle">
+              <option value="remote">Remote</option>
+              <option value="in_person">In-person</option>
+              <option value="hybrid">Hybrid</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Social Profiles Section -->
+      <div class="profile-section">
+        <h3>Social Profiles</h3>
+        <div style="display: grid; gap: 15px;">
+          <div>
+            <label>Portfolio/Website</label>
+            <input type="text" id="portfolioUrl" placeholder="https://yourportfolio.com">
+          </div>
+          <div>
+            <label>LinkedIn</label>
+            <input type="text" id="linkedin" placeholder="https://linkedin.com/in/yourprofile">
+          </div>
+          <div>
+            <label>Twitter/X</label>
+            <input type="text" id="twitter" placeholder="https://twitter.com/yourhandle">
+          </div>
+          <div>
+            <label>GitHub</label>
+            <input type="text" id="github" placeholder="https://github.com/yourusername">
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Matching Criteria Section -->
+      <div class="profile-section">
+        <h3>AI Matching Criteria</h3>
+        <p style="color: #666; margin-bottom: 15px;">These preferences help AI find better matches for you</p>
+        <div id="matchingCriteria" style="background: #f8f9ff; padding: 20px; border-radius: 8px; border-left: 3px solid #667eea;">
+          <p style="color: #666;">Loading...</p>
+        </div>
+        <button onclick="regenerateCriteria()" class="btn-secondary" style="margin-top: 15px;">
+          🔄 Regenerate AI Criteria
+        </button>
+      </div>
+
+      <!-- Actions -->
+      <div style="display: flex; gap: 15px; margin-top: 30px;">
+        <button onclick="saveProfile()" class="btn-primary">Save Changes</button>
+        <button onclick="window.location.href='search.html'" class="btn-secondary">Cancel</button>
+      </div>
+
+      <p class="error-msg" id="errorMsg"></p>
+      <p class="success-msg" id="successMsg"></p>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="auth.js"></script>
+  <script src="profile.js"></script>
+</body>
+</html>
