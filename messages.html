@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Messages - SuperNetworkAI</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <div class="nav">
+      <div class="nav-logo">SuperNetworkAI</div>
+      <div class="nav-links">
+        <a href="search.html">Search</a>
+        <a href="messages.html">Messages</a>
+        <a href="profile.html">Profile</a>
+        <a href="#" onclick="logout()">Logout</a>
+      </div>
+    </div>
+
+    <div class="content">
+      <h1>Messages</h1>
+
+      <div class="messages-container">
+        <!-- Conversations List -->
+        <div class="conversations-list">
+          <h3 style="margin-bottom: 20px; color: #667eea;">Conversations</h3>
+          <div id="conversationsList">
+            <!-- Conversations will be loaded here -->
+          </div>
+          <div id="noConversations" style="display: none; padding: 20px; text-align: center; color: #666;">
+            <p>No conversations yet</p>
+            <p style="font-size: 0.9em;">Start by connecting with someone!</p>
+          </div>
+        </div>
+
+        <!-- Chat Area -->
+        <div class="chat-area">
+          <div id="noChatSelected" style="display: flex; align-items: center; justify-content: center; height: 100%; color: #666; text-align: center;">
+            <div>
+              <h3>Select a conversation</h3>
+              <p>Choose a conversation from the left to start messaging</p>
+            </div>
+          </div>
+
+          <div id="chatArea" style="display: none;">
+            <div style="border-bottom: 2px solid #e0e0e0; padding-bottom: 15px; margin-bottom: 20px;">
+              <h3 id="chatWithName" style="color: #667eea;"></h3>
+            </div>
+
+            <div class="messages-list" id="messagesList">
+              <!-- Messages will be loaded here -->
+            </div>
+
+            <div class="message-input">
+              <input 
+                type="text" 
+                id="messageInput" 
+                placeholder="Type your message..."
+                onkeypress="if(event.key === 'Enter') sendMessage()"
+              >
+              <button onclick="sendMessage()" class="btn-primary" style="width: auto; padding: 12px 30px;">
+                Send
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supa
