@@ -3,456 +3,519 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SuperNetworkAI - Find Your Perfect Cofounder, Teammate or Client</title>
+  <title>SuperNetworkAI - Intelligence Meets Connection</title>
   <link rel="stylesheet" href="styles.css">
   <style>
-    /* Landing Page Specific Styles */
-    .landing-hero {
-      text-align: center;
-      padding: 80px 20px;
-      position: relative;
+    /* Apple-inspired Landing Page with Liquid Glass */
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
     }
 
-    .landing-hero h1 {
-      font-size: 3.5em;
+    .landing-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* Logo & Navigation */
+    .landing-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 40px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      margin-bottom: 60px;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .logo-icon {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, #fff 0%, #f0f0ff 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8em;
+      box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+    }
+
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .logo-name {
+      font-size: 1.5em;
+      font-weight: 700;
+      color: white;
+      letter-spacing: -0.5px;
+    }
+
+    .logo-tagline {
+      font-size: 0.75em;
+      color: rgba(255, 255, 255, 0.8);
+      letter-spacing: 0.5px;
+      margin-top: -3px;
+    }
+
+    /* Hero Section - Apple Style */
+    .hero-section {
+      text-align: center;
+      padding: 100px 20px 120px 20px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .hero-section h1 {
+      font-size: 4em;
+      font-weight: 700;
       background: linear-gradient(135deg, #fff 0%, #f0f0ff 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      margin-bottom: 20px;
-      font-weight: 900;
-      line-height: 1.2;
+      margin-bottom: 25px;
+      line-height: 1.1;
+      letter-spacing: -2px;
     }
 
-    .landing-hero p {
-      font-size: 1.3em;
-      color: #f0f0ff;
-      margin-bottom: 40px;
-      max-width: 700px;
-      margin-left: auto;
-      margin-right: auto;
+    .hero-section .subtitle {
+      font-size: 1.5em;
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 50px;
+      line-height: 1.5;
+      font-weight: 400;
     }
 
-    .glass-card {
+    /* Glass Cards - Apple Style */
+    .glass-section {
       background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border-radius: 20px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 30px;
       border: 1px solid rgba(255, 255, 255, 0.2);
-      padding: 40px;
-      margin-bottom: 30px;
-      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-      transition: transform 0.3s, box-shadow 0.3s;
+      padding: 80px 60px;
+      margin-bottom: 40px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     }
 
-    .glass-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 12px 48px 0 rgba(31, 38, 135, 0.5);
+    .section-header {
+      text-align: center;
+      margin-bottom: 60px;
     }
 
+    .section-header h2 {
+      font-size: 3em;
+      color: white;
+      font-weight: 700;
+      margin-bottom: 15px;
+      letter-spacing: -1px;
+    }
+
+    .section-header p {
+      font-size: 1.3em;
+      color: rgba(255, 255, 255, 0.85);
+      max-width: 700px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* Feature Grid */
     .features-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 30px;
-      margin: 40px 0;
+      margin-top: 50px;
     }
 
     .feature-card {
-      background: rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.08);
       backdrop-filter: blur(10px);
-      border-radius: 16px;
-      padding: 30px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      text-align: center;
-      transition: all 0.3s;
+      border-radius: 24px;
+      padding: 40px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .feature-card:hover {
       transform: translateY(-8px);
-      background: rgba(255, 255, 255, 0.2);
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+      background: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      border-color: rgba(255, 255, 255, 0.3);
     }
 
     .feature-icon {
-      font-size: 3em;
-      margin-bottom: 15px;
+      font-size: 3.5em;
+      margin-bottom: 20px;
       display: block;
     }
 
     .feature-card h3 {
       color: white;
-      margin-bottom: 10px;
-      font-size: 1.3em;
+      font-size: 1.5em;
+      font-weight: 600;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
     }
 
     .feature-card p {
       color: rgba(255, 255, 255, 0.8);
-      line-height: 1.6;
+      line-height: 1.7;
+      font-size: 1.05em;
     }
 
+    /* Psychology Section */
+    .psychology-card {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%);
+      backdrop-filter: blur(15px);
+      border-radius: 24px;
+      padding: 40px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      margin-bottom: 25px;
+    }
+
+    .psychology-card h4 {
+      color: #fff;
+      font-size: 1.4em;
+      font-weight: 600;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .psychology-card p {
+      color: rgba(255, 255, 255, 0.85);
+      line-height: 1.8;
+      font-size: 1.05em;
+    }
+
+    .psychology-icon {
+      font-size: 1.5em;
+    }
+
+    /* CTA Buttons - Apple Style */
     .cta-buttons {
       display: flex;
       gap: 20px;
       justify-content: center;
       flex-wrap: wrap;
+      margin-top: 40px;
     }
 
-    .btn-hero {
-      padding: 18px 40px;
-      font-size: 1.2em;
-      border-radius: 12px;
+    .btn-apple {
+      padding: 16px 40px;
+      font-size: 1.1em;
+      border-radius: 980px;
       border: none;
-      font-weight: bold;
+      font-weight: 600;
       cursor: pointer;
-      transition: all 0.3s;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       text-decoration: none;
       display: inline-block;
+      letter-spacing: -0.2px;
     }
 
-    .btn-hero-primary {
+    .btn-apple-primary {
       background: white;
       color: #667eea;
-      box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+      box-shadow: 0 4px 20px rgba(255, 255, 255, 0.3);
     }
 
-    .btn-hero-primary:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 6px 20px rgba(255, 255, 255, 0.4);
+    .btn-apple-primary:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 30px rgba(255, 255, 255, 0.5);
     }
 
-    .btn-hero-secondary {
-      background: rgba(255, 255, 255, 0.2);
-      color: white;
-      border: 2px solid white;
-      backdrop-filter: blur(10px);
-    }
-
-    .btn-hero-secondary:hover {
-      background: rgba(255, 255, 255, 0.3);
-      transform: translateY(-3px);
-    }
-
-    .section-title {
-      text-align: center;
-      font-size: 2.5em;
-      color: white;
-      margin-bottom: 20px;
-      font-weight: bold;
-    }
-
-    .section-subtitle {
-      text-align: center;
-      font-size: 1.2em;
-      color: rgba(255, 255, 255, 0.8);
-      margin-bottom: 50px;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .use-case-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 25px;
-      margin: 40px 0;
-    }
-
-    .use-case-card {
-      background: rgba(255, 255, 255, 0.12);
-      backdrop-filter: blur(10px);
-      border-radius: 16px;
-      padding: 25px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: white;
-    }
-
-    .use-case-card h4 {
-      font-size: 1.3em;
-      margin-bottom: 10px;
-      color: #fff;
-    }
-
-    .use-case-card p {
-      color: rgba(255, 255, 255, 0.85);
-      line-height: 1.5;
-    }
-
-    .how-it-works {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 30px;
-      margin: 40px 0;
-    }
-
-    .step-card {
+    .btn-apple-secondary {
       background: rgba(255, 255, 255, 0.15);
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.5);
       backdrop-filter: blur(10px);
-      border-radius: 16px;
-      padding: 30px;
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      position: relative;
+    }
+
+    .btn-apple-secondary:hover {
+      background: rgba(255, 255, 255, 0.25);
+      border-color: rgba(255, 255, 255, 0.8);
+      transform: scale(1.05);
+    }
+
+    /* Steps */
+    .steps-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 40px;
+      margin-top: 60px;
+    }
+
+    .step-item {
       text-align: center;
+      position: relative;
     }
 
     .step-number {
-      position: absolute;
-      top: -20px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 50px;
-      height: 50px;
-      background: white;
-      color: #667eea;
+      width: 70px;
+      height: 70px;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 255, 255, 0.4);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.5em;
-      font-weight: bold;
-      box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
-    }
-
-    .step-card h4 {
+      font-size: 2em;
+      font-weight: 700;
       color: white;
-      font-size: 1.3em;
-      margin: 30px 0 15px 0;
+      margin: 0 auto 25px auto;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
     }
 
-    .step-card p {
+    .step-item h4 {
+      color: white;
+      font-size: 1.4em;
+      font-weight: 600;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+    }
+
+    .step-item p {
       color: rgba(255, 255, 255, 0.85);
-      line-height: 1.6;
+      line-height: 1.7;
+      font-size: 1.05em;
     }
 
+    /* Stats */
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-      margin: 40px 0;
+      gap: 30px;
+      margin-top: 50px;
     }
 
-    .stat-card {
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(10px);
-      border-radius: 16px;
-      padding: 25px;
+    .stat-item {
       text-align: center;
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 30px;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
     }
 
     .stat-number {
-      font-size: 2.5em;
-      font-weight: bold;
+      font-size: 3em;
+      font-weight: 700;
       color: white;
-      margin-bottom: 5px;
+      margin-bottom: 8px;
+      letter-spacing: -1px;
     }
 
     .stat-label {
       color: rgba(255, 255, 255, 0.8);
-      font-size: 1em;
+      font-size: 1.05em;
     }
 
     @media (max-width: 768px) {
-      .landing-hero h1 {
-        font-size: 2.2em;
+      .hero-section h1 {
+        font-size: 2.5em;
       }
       
-      .landing-hero p {
-        font-size: 1.1em;
+      .section-header h2 {
+        font-size: 2em;
+      }
+      
+      .glass-section {
+        padding: 50px 30px;
       }
     }
   </style>
 </head>
 <body>
-  <div class="container" style="max-width: 1400px;">
+  <div class="landing-container">
     
+    <!-- Navigation with Logo -->
+    <div class="landing-nav">
+      <div class="logo-container">
+        <div class="logo-icon">🧠</div>
+        <div class="logo-text">
+          <div class="logo-name">SuperNetworkAI</div>
+          <div class="logo-tagline">Intelligence Meets Connection</div>
+        </div>
+      </div>
+      <div class="cta-buttons" style="margin: 0;">
+        <button class="btn-apple btn-apple-secondary" onclick="showAuthForms('login')">Sign In</button>
+      </div>
+    </div>
+
     <!-- Hero Section -->
-    <div class="landing-hero">
-      <h1>Find Your Perfect Cofounder,<br>Teammate, or Client</h1>
-      <p>AI-powered networking that matches you with the right people based on your passions, skills, and purpose</p>
+    <div class="hero-section">
+      <h1>Find Your Perfect<br>Cofounder. Teammate. Client.</h1>
+      <p class="subtitle">AI-powered networking that goes beyond skills to understand your purpose, passion, and what makes you unique</p>
       
       <div class="cta-buttons">
-        <button class="btn-hero btn-hero-primary" onclick="showTab('signup')">Get Started Free</button>
-        <button class="btn-hero btn-hero-secondary" onclick="showTab('login')">Sign In</button>
+        <button class="btn-apple btn-apple-primary" onclick="showAuthForms('signup')">Get Started Free</button>
+        <button class="btn-apple btn-apple-secondary" onclick="document.getElementById('howItWorks').scrollIntoView({behavior: 'smooth'})">See How It Works</button>
       </div>
     </div>
 
-    <!-- Problem Section -->
-    <div class="glass-card">
-      <h2 class="section-title">The Networking Problem</h2>
-      <p class="section-subtitle">Finding the right partners is like finding a needle in a haystack</p>
-      
+    <!-- The Science Behind It -->
+    <div class="glass-section">
+      <div class="section-header">
+        <h2>Built on Human Psychology</h2>
+        <p>SuperNetworkAI applies proven psychological principles to help you build meaningful connections</p>
+      </div>
+
+      <div class="psychology-card">
+        <h4><span class="psychology-icon">🧩</span> Ikigai Framework</h4>
+        <p>Japanese concept meaning "reason for being." We use it because research shows that people who understand their Ikigai (what they love + what they're good at + what the world needs + what they can be paid for) build more fulfilling partnerships. Our AI matches you based on complementary purposes, not just overlapping skills.</p>
+      </div>
+
+      <div class="psychology-card">
+        <h4><span class="psychology-icon">🎯</span> Homophily Principle</h4>
+        <p>Humans naturally connect with similar others (homophily), but the best partnerships balance similarity with complementarity. Our AI finds people who share your values and vision while bringing different strengths to the table—creating productive friction, not conflict.</p>
+      </div>
+
+      <div class="psychology-card">
+        <h4><span class="psychology-icon">🧠</span> Reduced Cognitive Load</h4>
+        <p>Research shows decision paralysis happens when we have too many choices. Instead of scrolling through hundreds of profiles, our AI pre-filters and ranks matches with explanations—reducing mental effort while increasing quality. You see 6-10 highly compatible people, not 600 strangers.</p>
+      </div>
+
+      <div class="psychology-card">
+        <h4><span class="psychology-icon">🤝</span> Dunbar's Number</h4>
+        <p>Anthropologist Robin Dunbar found humans can maintain ~150 meaningful relationships. Quality > Quantity. SuperNetworkAI helps you build a smaller, higher-quality network of people aligned with your goals—not a massive contact list of weak ties.</p>
+      </div>
+    </div>
+
+    <!-- Features -->
+    <div class="glass-section">
+      <div class="section-header">
+        <h2>How SuperNetworkAI Works</h2>
+        <p>Intelligent matching powered by Claude AI</p>
+      </div>
+
       <div class="features-grid">
         <div class="feature-card">
-          <span class="feature-icon">⏰</span>
-          <h3>Time-Consuming</h3>
-          <p>Scrolling through hundreds of profiles manually takes hours</p>
+          <span class="feature-icon">🎨</span>
+          <h3>Purpose-Driven Profiles</h3>
+          <p>Answer 4 Ikigai questions. AI extracts what matters: your passion, skills, and what you bring to the world.</p>
         </div>
-        
+
+        <div class="feature-card">
+          <span class="feature-icon">🔮</span>
+          <h3>Natural Language Search</h3>
+          <p>Describe who you need in plain English: "Technical cofounder who loves ed-tech in NYC." AI understands context.</p>
+        </div>
+
         <div class="feature-card">
           <span class="feature-icon">🎯</span>
-          <h3>Poor Matches</h3>
-          <p>Surface-level info leads to incompatible partnerships</p>
+          <h3>Smart Match Scores</h3>
+          <p>See ranked results with AI-generated scores (45%, 85%) and explanations for why someone fits.</p>
         </div>
-        
-        <div class="feature-card">
-          <span class="feature-icon">🤔</span>
-          <h3>No Context</h3>
-          <p>Hard to understand WHY someone might be a good fit</p>
-        </div>
-      </div>
-    </div>
 
-    <!-- Solution Section -->
-    <div class="glass-card">
-      <h2 class="section-title">Powered by AI Matching</h2>
-      <p class="section-subtitle">Claude AI understands your purpose and finds people who complement your vision</p>
-      
-      <div class="features-grid">
         <div class="feature-card">
-          <span class="feature-icon">🧠</span>
-          <h3>Ikigai-Based Matching</h3>
-          <p>Goes beyond skills to understand your passion, purpose, and what drives you</p>
+          <span class="feature-icon">🔄</span>
+          <h3>Continuous Learning</h3>
+          <p>AI updates your matching criteria automatically as your profile evolves—always relevant.</p>
         </div>
-        
-        <div class="feature-card">
-          <span class="feature-icon">🔍</span>
-          <h3>Natural Language Search</h3>
-          <p>Just describe who you need: "AI engineer in Bangalore who loves startups"</p>
-        </div>
-        
-        <div class="feature-card">
-          <span class="feature-icon">🎓</span>
-          <h3>Smart Rankings</h3>
-          <p>AI scores each match (45%, 85%) and explains why they're perfect for you</p>
-        </div>
-        
-        <div class="feature-card">
-          <span class="feature-icon">💡</span>
-          <h3>Auto-Updated Criteria</h3>
-          <p>AI continuously learns and updates your matching preferences</p>
-        </div>
-        
+
         <div class="feature-card">
           <span class="feature-icon">💬</span>
-          <h3>Built-in Messaging</h3>
-          <p>Connect and chat without leaving the platform</p>
+          <h3>Built-in Chat</h3>
+          <p>No need to exchange emails. Connect and message directly in the app with real-time updates.</p>
         </div>
-        
+
         <div class="feature-card">
           <span class="feature-icon">📄</span>
-          <h3>CV Import</h3>
-          <p>AI extracts skills and experience from your resume automatically</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Use Cases Section -->
-    <div class="glass-card">
-      <h2 class="section-title">Who Is This For?</h2>
-      <p class="section-subtitle">Perfect for anyone building something meaningful</p>
-      
-      <div class="use-case-grid">
-        <div class="use-case-card">
-          <h4>🚀 Startup Founders</h4>
-          <p>Find technical or business cofounders who share your vision and complement your skillset</p>
-        </div>
-        
-        <div class="use-case-card">
-          <h4>💼 Freelancers</h4>
-          <p>Discover ideal clients whose needs match your expertise and working style</p>
-        </div>
-        
-        <div class="use-case-card">
-          <h4>👨‍💻 Developers</h4>
-          <p>Connect with teammates for side projects or open-source collaborations</p>
-        </div>
-        
-        <div class="use-case-card">
-          <h4>🎨 Creators</h4>
-          <p>Find collaborators who understand your creative vision</p>
-        </div>
-        
-        <div class="use-case-card">
-          <h4>📚 Students</h4>
-          <p>Build your network and find study groups or project partners</p>
-        </div>
-        
-        <div class="use-case-card">
-          <h4>🏢 Companies</h4>
-          <p>Identify contractors and consultants who fit your culture</p>
+          <h3>CV Auto-Import</h3>
+          <p>Upload your resume. AI extracts skills and experience automatically—no manual data entry.</p>
         </div>
       </div>
     </div>
 
     <!-- How It Works -->
-    <div class="glass-card">
-      <h2 class="section-title">How It Works</h2>
-      <p class="section-subtitle">Get matched in 3 simple steps</p>
-      
-      <div class="how-it-works">
-        <div class="step-card">
+    <div class="glass-section" id="howItWorks">
+      <div class="section-header">
+        <h2>Three Steps to Your Next Partner</h2>
+        <p>Get matched in minutes, not months</p>
+      </div>
+
+      <div class="steps-container">
+        <div class="step-item">
           <div class="step-number">1</div>
-          <h4>Complete Your Ikigai</h4>
-          <p>Tell us what you love, what you're good at, what the world needs, and what you can be paid for</p>
+          <h4>Share Your Ikigai</h4>
+          <p>Answer 4 questions about what you love, what you're good at, what the world needs, and what you can monetize. Upload your CV for instant skills extraction.</p>
         </div>
-        
-        <div class="step-card">
+
+        <div class="step-item">
           <div class="step-number">2</div>
           <h4>AI Analyzes & Matches</h4>
-          <p>Claude AI generates your matching criteria and finds compatible people based on complementary skills and shared passions</p>
+          <p>Claude AI generates personalized matching criteria and scans the network for people with complementary skills, similar passions, and aligned intentions.</p>
         </div>
-        
-        <div class="step-card">
+
+        <div class="step-item">
           <div class="step-number">3</div>
-          <h4>Connect & Collaborate</h4>
-          <p>See match scores with AI explanations, send connection requests, and start building together</p>
+          <h4>Connect & Build</h4>
+          <p>Review AI-ranked matches with scores and explanations. Send connection requests and start chatting—all in one platform.</p>
         </div>
       </div>
     </div>
 
-    <!-- Stats Section -->
-    <div class="glass-card">
-      <h2 class="section-title">Why SuperNetworkAI?</h2>
-      
+    <!-- Stats -->
+    <div class="glass-section">
+      <div class="section-header">
+        <h2>Why Founders Trust SuperNetworkAI</h2>
+      </div>
+
       <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-number">AI-Powered</div>
-          <div class="stat-label">Claude Sonnet 4</div>
+        <div class="stat-item">
+          <div class="stat-number">AI</div>
+          <div class="stat-label">Claude Sonnet 4 Powered</div>
         </div>
-        
-        <div class="stat-card">
-          <div class="stat-number">10 sec</div>
+
+        <div class="stat-item">
+          <div class="stat-number">&lt;10s</div>
           <div class="stat-label">Average Match Time</div>
         </div>
-        
-        <div class="stat-card">
-          <div class="stat-number">100%</div>
-          <div class="stat-label">Free to Use</div>
+
+        <div class="stat-item">
+          <div class="stat-number">Free</div>
+          <div class="stat-label">Always Free to Use</div>
         </div>
-        
-        <div class="stat-card">
+
+        <div class="stat-item">
           <div class="stat-number">Real-time</div>
-          <div class="stat-label">Messaging</div>
+          <div class="stat-label">Instant Messaging</div>
         </div>
       </div>
     </div>
 
     <!-- Final CTA -->
-    <div class="glass-card" style="text-align: center;">
-      <h2 class="section-title">Ready to Find Your Perfect Match?</h2>
-      <p class="section-subtitle">Join SuperNetworkAI and let AI connect you with the right people</p>
+    <div class="glass-section" style="text-align: center;">
+      <div class="section-header">
+        <h2>Ready to Find Your Perfect Match?</h2>
+        <p>Join SuperNetworkAI and let psychology-backed AI connect you with the right people</p>
+      </div>
       
       <div class="cta-buttons">
-        <button class="btn-hero btn-hero-primary" onclick="showTab('signup')">Start Matching Now</button>
+        <button class="btn-apple btn-apple-primary" onclick="showAuthForms('signup')" style="font-size: 1.2em; padding: 18px 50px;">Start Matching Now</button>
       </div>
     </div>
 
     <!-- Auth Forms (Hidden by default) -->
-    <div id="authForms" style="display: none; margin-top: 40px;">
-      <div class="auth-container glass-card">
+    <div id="authForms" style="display: none; margin-top: 60px;">
+      <div class="glass-section" style="max-width: 500px; margin: 0 auto;">
         <div class="tabs">
-          <button class="tab-btn active" onclick="showTab('login')">Sign In</button>
-          <button class="tab-btn" onclick="showTab('signup')">Sign Up</button>
+          <button class="tab-btn active" onclick="switchTab('login')">Sign In</button>
+          <button class="tab-btn" onclick="switchTab('signup')">Sign Up</button>
         </div>
 
         <!-- Login Form -->
@@ -495,11 +558,13 @@
   <script src="config.js"></script>
   <script src="auth.js"></script>
   <script>
-    // Scroll to auth forms when CTA is clicked
-    function showTab(tab) {
+    function showAuthForms(tab) {
       document.getElementById('authForms').style.display = 'block';
       document.getElementById('authForms').scrollIntoView({ behavior: 'smooth' });
-      
+      switchTab(tab);
+    }
+
+    function switchTab(tab) {
       const loginForm = document.getElementById('loginForm');
       const signupForm = document.getElementById('signupForm');
       const tabs = document.querySelectorAll('.tab-btn');
