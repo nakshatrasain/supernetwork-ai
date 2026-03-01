@@ -221,8 +221,12 @@ async function connectWithUser(profileId, name) {
   if (!message) return;
 
   try {
-    const { data: { session } } = await supabaseClient.auth.getSession();
-    
+    // Make sure we have current user loaded
+    if (!currentUser || !currentUser.id) {
+      alert('Error: User profile not loaded. Please refresh the page.');
+      return;
+    }
+
     // Create connection request
     const { error } = await supabaseClient
       .from('connection_requests')
@@ -232,7 +236,10 @@ async function connectWithUser(profileId, name) {
         status: 'pending'
       }]);
 
-    if (error) throw error;
+    if (error) {
+      console.error('Connection request error:', error);
+      throw error;
+    }
 
     // Send initial message
     const { error: msgError } = await supabaseClient
@@ -243,13 +250,16 @@ async function connectWithUser(profileId, name) {
         message: message
       }]);
 
-    if (msgError) throw msgError;
+    if (msgError) {
+      console.error('Message error:', msgError);
+      throw msgError;
+    }
 
     alert('Connection request sent! Check Messages to continue the conversation.');
     window.location.href = 'messages.html';
   } catch (error) {
     console.error('Connect error:', error);
-    alert('Error sending connection request');
+    alert('Error sending connection request: ' + error.message);
   }
 }
 
