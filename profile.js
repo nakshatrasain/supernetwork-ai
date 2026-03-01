@@ -1,15 +1,19 @@
+// Initialize Supabase
+const { createClient } = supabase;
+const supabaseClient = createClient(CONFIG.supabase.url, CONFIG.supabase.anonKey);
+
 let currentUser = null;
 
 // Initialize
 async function init() {
-  const { data: { session } } = await supabase.auth.getSession();
+  const { data: { session } } = await supabaseClient.auth.getSession();
   if (!session) {
     window.location.href = 'index.html';
     return;
   }
 
   // Get current user profile
-  const { data: profile } = await supabase
+  const { data: profile } = await supabaseClient
     .from('profiles')
     .select('*')
     .eq('user_id', session.user.id)
@@ -113,7 +117,7 @@ async function updateVisibility() {
   const visibility = document.getElementById('visibilityToggle').value;
   
   try {
-    const { error } = await supabase
+    const { error } = await supabaseClient
       .from('profiles')
       .update({ visibility: visibility })
       .eq('id', currentUser.id);
@@ -191,7 +195,7 @@ Working Style: ${workingStyle}`
       currentUser.matching_criteria = criteria;
       
       // Save to database
-      await supabase
+      await supabaseClient
         .from('profiles')
         .update({ matching_criteria: criteria })
         .eq('id', currentUser.id);
@@ -235,7 +239,7 @@ async function saveProfile() {
     };
 
     // Update profile
-    const { error } = await supabase
+    const { error } = await supabaseClient
       .from('profiles')
       .update({
         name: document.getElementById('name').value,
