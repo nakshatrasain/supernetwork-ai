@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Find Matches - SuperNetworkAI</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <div class="nav">
+      <div class="nav-logo">SuperNetworkAI</div>
+      <div class="nav-links">
+        <a href="search.html">Search</a>
+        <a href="messages.html">Messages</a>
+        <a href="profile.html">Profile</a>
+        <a href="#" onclick="logout()">Logout</a>
+      </div>
+    </div>
+
+    <div class="content">
+      <h1>Find Your Perfect Match</h1>
+      <p style="margin-bottom: 30px; color: #666;">Use natural language to describe who you're looking for</p>
+
+      <!-- Search Container -->
+      <div class="search-container">
+        <div class="search-box">
+          <input 
+            type="text" 
+            id="searchQuery" 
+            placeholder="E.g., 'AI engineer who loves startups in Bangalore' or 'Marketing expert available weekends'"
+            onkeypress="if(event.key === 'Enter') searchMatches()"
+          >
+          <button onclick="searchMatches()" class="btn-primary" style="width: auto; padding: 12px 30px;">
+            🔍 Search
+          </button>
+        </div>
+
+        <!-- Quick Filters -->
+        <div class="filters">
+          <div class="filter-tag" onclick="toggleFilter('cofounder')" data-filter="seeking_cofounder">
+            🤝 Cofounders
+          </div>
+          <div class="filter-tag" onclick="toggleFilter('client')" data-filter="seeking_client">
+            💼 Clients
+          </div>
+          <div class="filter-tag" onclick="toggleFilter('teammate')" data-filter="seeking_teammate">
+            👥 Teammates
+          </div>
+          <div class="filter-tag" onclick="clearFilters()">
+            ✕ Clear Filters
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div id="loadingState" class="loading" style="display: none;">
+        AI is finding your perfect matches
+      </div>
+
+      <!-- Matches Grid -->
+      <div id="matchesGrid" class="matches-grid">
+        <!-- Matches will be inserted here by JS -->
+      </div>
+
+      <!-- No Results -->
+      <div id="noResults" style="display: none; text-align: center; padding: 60px; color: #666;">
+        <h3>No matches found</h3>
+        <p>Try adjusting your search or filters</p>
+      </div>
+
+      <!-- Initial Suggestions -->
+      <div id="initialSuggestions">
+        <h3 style="margin-top: 40px; color: #667eea;">Suggested for You</h3>
+        <p style="color: #666; margin-bottom: 20px;">Based on your profile and interests</p>
+        <div id="suggestionsGrid" class="matches-grid">
+          <!-- AI suggestions will load here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="auth.js"></script>
+  <script src="search.js"></script>
+</body>
+</html>
