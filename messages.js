@@ -1,7 +1,4 @@
 // Initialize Supabase
-const { createClient } = supabase;
-const supabaseClient = createClient(CONFIG.supabase.url, CONFIG.supabase.anonKey);
-
 let currentUser = null;
 let conversations = [];
 let activeConversation = null;
