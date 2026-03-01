@@ -1,7 +1,3 @@
-// Initialize Supabase
-const { createClient } = supabase;
-const supabaseClient = createClient(CONFIG.supabase.url, CONFIG.supabase.anonKey);
-
 let currentUser = null;
 let allProfiles = [];
 let activeFilters = [];
