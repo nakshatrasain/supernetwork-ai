@@ -1,17 +1,21 @@
+// Initialize Supabase
+const { createClient } = supabase;
+const supabaseClient = createClient(CONFIG.supabase.url, CONFIG.supabase.anonKey);
+
 let currentUser = null;
 let allProfiles = [];
 let activeFilters = [];
 
 // Initialize
 async function init() {
-  const { data: { session } } = await supabase.auth.getSession();
+  const { data: { session } } = await supabaseClient.auth.getSession();
   if (!session) {
     window.location.href = 'index.html';
     return;
   }
 
   // Get current user profile
-  const { data: profile } = await supabase
+  const { data: profile } = await supabaseClient
     .from('profiles')
     .select('*')
     .eq('user_id', session.user.id)
@@ -28,9 +32,9 @@ async function init() {
 
 // Load all profiles
 async function loadAllProfiles() {
-  const { data: { session } } = await supabase.auth.getSession();
+  const { data: { session } } = await supabaseClient.auth.getSession();
   
-  const { data: profiles } = await supabase
+  const { data: profiles } = await supabaseClient
     .from('profiles')
     .select('*')
     .eq('visibility', 'public')
@@ -259,4 +263,78 @@ function createMatchCard(profile, match) {
         💡 ${match.explanation}
       </div>
 
-      <div class="match-actions
+      <div class="match-actions">
+        <button class="btn-connect" onclick="connectWithUser('${profile.id}', '${profile.name}')">
+          Connect
+        </button>
+        <button class="btn-secondary" onclick="viewProfile('${profile.id}')">
+          View Profile
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+// Connect with user
+async function connectWithUser(profileId, name) {
+  const message = prompt(`Send a connection request to ${name}:`, `Hi ${name}, I'd love to connect!`);
+  
+  if (!message) return;
+
+  try {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    
+    // Create connection request
+    const { error } = await supabaseClient
+      .from('connection_requests')
+      .insert([{
+        from_user_id: currentUser.id,
+        to_user_id: profileId,
+        status: 'pending'
+      }]);
+
+    if (error) throw error;
+
+    // Send initial message
+    const { error: msgError } = await supabaseClient
+      .from('messages')
+      .insert([{
+        from_user_id: currentUser.id,
+        to_user_id: profileId,
+        message: message
+      }]);
+
+    if (msgError) throw msgError;
+
+    alert('Connection request sent! Check Messages to continue the conversation.');
+    window.location.href = 'messages.html';
+  } catch (error) {
+    console.error('Connect error:', error);
+    alert('Error sending connection request');
+  }
+}
+
+// View Profile
+function viewProfile(profileId) {
+  const profile = allProfiles.find(p => p.id === profileId);
+  if (!profile) return;
+
+  const info = `
+Name: ${profile.name}
+Location: ${profile.location || 'Not specified'}
+Intent: ${profile.intent}
+Skills: ${profile.skills ? profile.skills.join(', ') : 'Not specified'}
+Availability: ${profile.availability || 'Not specified'}
+
+Ikigai:
+- Loves: ${profile.ikigai?.love || 'N/A'}
+- Good at: ${profile.ikigai?.good_at || 'N/A'}
+- World needs: ${profile.ikigai?.world_needs || 'N/A'}
+- Paid for: ${profile.ikigai?.paid_for || 'N/A'}
+  `;
+  
+  alert(info);
+}
+
+// Initialize on page load
+init();
