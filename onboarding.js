@@ -1,3 +1,7 @@
+// Initialize Supabase
+const { createClient } = supabase;
+const supabaseClient = createClient(CONFIG.supabase.url, CONFIG.supabase.anonKey);
+
 // Handle CV Upload and Extract with Claude
 let cvData = null;
 
@@ -118,4 +122,76 @@ async function saveProfile() {
   successEl.textContent = '⏳ Saving profile and generating AI matching criteria...';
 
   try {
-    // Get current use
+    // Get current user
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (!session) {
+      window.location.href = 'index.html';
+      return;
+    }
+
+    // Call Claude to generate matching criteria
+    const criteriaResponse = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': CONFIG.claude.apiKey,
+        'anthropic-version': '2023-06-01'
+      },
+      body: JSON.stringify({
+        model: CONFIG.claude.model,
+        max_tokens: 1500,
+        messages: [{
+          role: 'user',
+          content: `Based on this person's profile, suggest ideal matching criteria for finding cofounders, teammates, or clients. Return ONLY valid JSON:
+{
+  "ideal_skills": ["skill1", "skill2"],
+  "ideal_traits": ["trait1", "trait2"],
+  "complementary_strengths": ["strength1", "strength2"],
+  "matching_preferences": "brief description"
+}
+
+Profile:
+Ikigai: ${JSON.stringify(ikigai)}
+Skills: ${skills.join(', ')}
+Intent: ${intent}
+Working Style: ${workingStyle}
+${cvData ? `CV Data: ${JSON.stringify(cvData)}` : ''}`
+        }]
+      })
+    });
+
+    const criteriaData = await criteriaResponse.json();
+    const criteriaMatch = criteriaData.content[0].text.match(/\{[\s\S]*\}/);
+    const matchingCriteria = criteriaMatch ? JSON.parse(criteriaMatch[0]) : {};
+
+    // Update profile in Supabase
+    const { error: updateError } = await supabaseClient
+      .from('profiles')
+      .update({
+        ikigai: ikigai,
+        skills: skills,
+        intent: intent,
+        location: location,
+        availability: availability,
+        working_style: workingStyle,
+        portfolio_url: document.getElementById('portfolioUrl').value,
+        social_profiles: socialProfiles,
+        cv_data: cvData,
+        matching_criteria: matchingCriteria,
+        updated_at: new Date().toISOString()
+      })
+      .eq('user_id', session.user.id);
+
+    if (updateError) {
+      errorEl.textContent = 'Error saving profile: ' + updateError.message;
+    } else {
+      successEl.textContent = '✅ Profile saved! Redirecting to search...';
+      setTimeout(() => {
+        window.location.href = 'search.html';
+      }, 1500);
+    }
+  } catch (error) {
+    console.error('Save error:', error);
+    errorEl.textContent = 'Error: ' + error.message;
+  }
+}
