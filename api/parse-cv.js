@@ -15,6 +15,16 @@ export default async function handler(req, res) {
   try {
     const { cvText } = req.body;
 
+    if (!cvText || cvText.length === 0) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'No CV text provided' 
+      });
+    }
+
+    // Truncate very long CVs to avoid token limits
+    const truncatedText = cvText.substring(0, 8000);
+
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -38,22 +48,37 @@ export default async function handler(req, res) {
 }
 
 CV Content:
-${cvText}`
+${truncatedText}`
         }]
       })
     });
 
+    if (!response.ok) {
+      throw new Error(`Claude API error: ${response.status}`);
+    }
+
     const data = await response.json();
+    
+    if (!data.content || !data.content[0] || !data.content[0].text) {
+      throw new Error('Invalid response from Claude API');
+    }
+
     const jsonMatch = data.content[0].text.match(/\{[\s\S]*\}/);
     
     if (jsonMatch) {
       const cvData = JSON.parse(jsonMatch[0]);
       return res.status(200).json({ success: true, data: cvData });
     } else {
-      return res.status(200).json({ success: false, error: 'Could not parse CV' });
+      return res.status(200).json({ 
+        success: false, 
+        error: 'Could not parse CV - no structured data found' 
+      });
     }
   } catch (error) {
     console.error('CV parsing error:', error);
-    return res.status(500).json({ success: false, error: error.message });
+    return res.status(500).json({ 
+      success: false, 
+      error: error.message || 'Internal server error' 
+    });
   }
 }
