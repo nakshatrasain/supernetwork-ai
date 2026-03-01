@@ -244,6 +244,40 @@ async function saveProfile() {
       throw error;
     }
 
+    successEl.textContent = '⏳ Profile saved! Updating AI matching criteria...';
+
+    // Auto-regenerate AI criteria after profile changes
+    try {
+      const response = await fetch('/api/generate-criteria', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          ikigai: ikigai,
+          skills: skills,
+          intent: document.getElementById('intent').value,
+          workingStyle: document.getElementById('workingStyle').value
+        })
+      });
+
+      const result = await response.json();
+      
+      if (result.success && result.data) {
+        // Update criteria in database
+        await supabaseClient
+          .from('profiles')
+          .update({ matching_criteria: result.data })
+          .eq('id', currentUser.id);
+        
+        currentUser.matching_criteria = result.data;
+        displayMatchingCriteria();
+      }
+    } catch (criteriaError) {
+      console.error('Auto-criteria update error:', criteriaError);
+      // Don't fail the save if criteria update fails
+    }
+
     // Update currentUser object
     currentUser.name = document.getElementById('name').value;
     currentUser.location = document.getElementById('location').value;
@@ -255,7 +289,7 @@ async function saveProfile() {
     currentUser.portfolio_url = portfolioUrl;
     currentUser.social_profiles = socialProfiles;
 
-    successEl.textContent = '✅ Profile saved successfully!';
+    successEl.textContent = '✅ Profile and AI criteria updated successfully!';
     
     setTimeout(() => {
       successEl.textContent = '';
