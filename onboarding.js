@@ -14,40 +14,21 @@ async function handleCVUpload(event) {
   try {
     const text = await extractTextFromFile(file);
     
-    // Call Claude to extract structured data from CV
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    // Call our API endpoint instead of Claude directly
+    const response = await fetch('/api/parse-cv', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': CONFIG.claude.apiKey,
-        'anthropic-version': '2023-06-01'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: CONFIG.claude.model,
-        max_tokens: 2000,
-        messages: [{
-          role: 'user',
-          content: `Extract structured information from this CV/Resume. Return ONLY valid JSON with this exact structure:
-{
-  "name": "full name",
-  "skills": ["skill1", "skill2"],
-  "experience": "brief summary",
-  "education": "education background",
-  "interests": "professional interests",
-  "location": "city or region if mentioned"
-}
-
-CV Content:
-${text}`
-        }]
+        cvText: text
       })
     });
 
-    const data = await response.json();
-    const jsonMatch = data.content[0].text.match(/\{[\s\S]*\}/);
+    const result = await response.json();
     
-    if (jsonMatch) {
-      cvData = JSON.parse(jsonMatch[0]);
+    if (result.success && result.data) {
+      cvData = result.data;
       
       // Auto-fill fields from CV
       if (cvData.skills && cvData.skills.length > 0) {
@@ -58,6 +39,8 @@ ${text}`
       }
       
       document.getElementById('uploadText').textContent = '✅ CV processed! Information extracted.';
+    } else {
+      document.getElementById('uploadText').textContent = '❌ Error processing CV. You can still continue manually.';
     }
   } catch (error) {
     console.error('CV processing error:', error);
@@ -127,40 +110,23 @@ async function saveProfile() {
       return;
     }
 
-    // Call Claude to generate matching criteria
-    const criteriaResponse = await fetch('https://api.anthropic.com/v1/messages', {
+    // Call our API endpoint for criteria generation
+    const criteriaResponse = await fetch('/api/generate-criteria', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': CONFIG.claude.apiKey,
-        'anthropic-version': '2023-06-01'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: CONFIG.claude.model,
-        max_tokens: 1500,
-        messages: [{
-          role: 'user',
-          content: `Based on this person's profile, suggest ideal matching criteria for finding cofounders, teammates, or clients. Return ONLY valid JSON:
-{
-  "ideal_skills": ["skill1", "skill2"],
-  "ideal_traits": ["trait1", "trait2"],
-  "complementary_strengths": ["strength1", "strength2"],
-  "matching_preferences": "brief description"
-}
-
-Profile:
-Ikigai: ${JSON.stringify(ikigai)}
-Skills: ${skills.join(', ')}
-Intent: ${intent}
-Working Style: ${workingStyle}
-${cvData ? `CV Data: ${JSON.stringify(cvData)}` : ''}`
-        }]
+        ikigai: ikigai,
+        skills: skills,
+        intent: intent,
+        workingStyle: workingStyle,
+        cvData: cvData
       })
     });
 
-    const criteriaData = await criteriaResponse.json();
-    const criteriaMatch = criteriaData.content[0].text.match(/\{[\s\S]*\}/);
-    const matchingCriteria = criteriaMatch ? JSON.parse(criteriaMatch[0]) : {};
+    const criteriaResult = await criteriaResponse.json();
+    const matchingCriteria = criteriaResult.success ? criteriaResult.data : {};
 
     // Update profile in Supabase
     const { error: updateError } = await supabaseClient
