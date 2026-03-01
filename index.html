@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SuperNetworkAI - AI-Powered Networking</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <div class="hero">
+      <h1>SuperNetworkAI</h1>
+      <p>Find your perfect cofounder, teammate, or client using AI-powered matching</p>
+    </div>
+
+    <div class="auth-container" id="authContainer">
+      <div class="auth-tabs">
+        <button class="tab-btn active" onclick="showTab('login')">Login</button>
+        <button class="tab-btn" onclick="showTab('signup')">Sign Up</button>
+      </div>
+
+      <!-- Login Form -->
+      <div id="loginForm" class="auth-form">
+        <h2>Welcome Back</h2>
+        <input type="email" id="loginEmail" placeholder="Email" required>
+        <input type="password" id="loginPassword" placeholder="Password" required>
+        <button onclick="login()" class="btn-primary">Login</button>
+        <p class="error-msg" id="loginError"></p>
+      </div>
+
+      <!-- Signup Form -->
+      <div id="signupForm" class="auth-form" style="display: none;">
+        <h2>Create Account</h2>
+        <input type="text" id="signupName" placeholder="Full Name" required>
+        <input type="email" id="signupEmail" placeholder="Email" required>
+        <input type="password" id="signupPassword" placeholder="Password (min 6 characters)" required>
+        <button onclick="signup()" class="btn-primary">Sign Up</button>
+        <p class="error-msg" id="signupError"></p>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="auth.js"></script>
+</body>
+</html>
