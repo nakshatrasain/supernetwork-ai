@@ -70,8 +70,6 @@ async function extractTextFromFile(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = (e) => {
-      // For simplicity, treating all as text
-      // In production, you'd handle different file types properly
       resolve(e.target.result);
     };
     reader.onerror = reject;
