@@ -85,53 +85,24 @@ async function searchMatches() {
       filteredProfiles = allProfiles.filter(p => activeFilters.includes(p.intent));
     }
 
-    // Call Claude to match and rank profiles
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    // Call our API endpoint
+    const response = await fetch('/api/search-matches', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': CONFIG.claude.apiKey,
-        'anthropic-version': '2023-06-01'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: CONFIG.claude.model,
-        max_tokens: 4000,
-        messages: [{
-          role: 'user',
-          content: `You are a professional networking matchmaker. Based on this search query, rank and explain the best matches from the available profiles.
-
-Search Query: "${query}"
-
-Searcher's Profile:
-${JSON.stringify(currentUser, null, 2)}
-
-Available Profiles:
-${JSON.stringify(filteredProfiles.slice(0, 20), null, 2)}
-
-Return ONLY valid JSON array with this structure (return top 10 matches):
-[
-  {
-    "profile_id": "uuid from profiles",
-    "match_score": 95,
-    "category": "cofounder" or "client" or "teammate",
-    "explanation": "2-3 sentence explanation of why this is a great match, focusing on complementary skills, shared interests, and alignment"
-  }
-]
-
-Important: 
-- match_score should be 0-100 based on relevance to search query
-- explanation should be specific and personalized
-- Only include matches with score > 60`
-        }]
+        query: query,
+        currentUser: currentUser,
+        profiles: filteredProfiles.slice(0, 20),
+        type: 'search'
       })
     });
 
-    const data = await response.json();
-    const jsonMatch = data.content[0].text.match(/\[[\s\S]*\]/);
+    const result = await response.json();
     
-    if (jsonMatch) {
-      const matches = JSON.parse(jsonMatch[0]);
-      displayMatches(matches);
+    if (result.success && result.data && result.data.length > 0) {
+      displayMatches(result.data);
     } else {
       document.getElementById('noResults').style.display = 'block';
     }
@@ -148,51 +119,23 @@ async function showAISuggestions() {
   document.getElementById('loadingState').style.display = 'block';
 
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    // Call our API endpoint
+    const response = await fetch('/api/search-matches', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': CONFIG.claude.apiKey,
-        'anthropic-version': '2023-06-01'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: CONFIG.claude.model,
-        max_tokens: 4000,
-        messages: [{
-          role: 'user',
-          content: `Suggest the top 6 best matches for this person based on their profile and matching criteria.
-
-User's Profile:
-${JSON.stringify(currentUser, null, 2)}
-
-Available Profiles:
-${JSON.stringify(allProfiles.slice(0, 30), null, 2)}
-
-Return ONLY valid JSON array:
-[
-  {
-    "profile_id": "uuid",
-    "match_score": 90,
-    "category": "cofounder" or "client" or "teammate",
-    "explanation": "Why this is a great match"
-  }
-]
-
-Focus on:
-- Complementary skills from their Ikigai
-- Alignment with their intent
-- Matching criteria preferences
-- Working style compatibility`
-        }]
+        currentUser: currentUser,
+        profiles: allProfiles.slice(0, 30),
+        type: 'suggestions'
       })
     });
 
-    const data = await response.json();
-    const jsonMatch = data.content[0].text.match(/\[[\s\S]*\]/);
+    const result = await response.json();
     
-    if (jsonMatch) {
-      const suggestions = JSON.parse(jsonMatch[0]);
-      displaySuggestions(suggestions);
+    if (result.success && result.data && result.data.length > 0) {
+      displaySuggestions(result.data);
     }
   } catch (error) {
     console.error('Suggestions error:', error);
