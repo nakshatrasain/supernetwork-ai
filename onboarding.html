@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Onboarding - SuperNetworkAI</title>
   <link rel="stylesheet" href="styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 <body>
   <div class="container">
@@ -17,51 +18,64 @@
 
     <div class="content">
       <h1>Complete Your Profile</h1>
-      <p style="margin-bottom: 30px; color: #666;">Help us understand you better to find your perfect matches</p>
+      <p style="margin-bottom: 30px; color: #666;">Tell us about yourself to get better matches</p>
 
-      <div class="onboarding-steps">
-        
-        <!-- Step 1: Ikigai -->
-        <div class="step">
-          <h3>1. Your Ikigai (Purpose & Passion)</h3>
-          <div class="ikigai-grid">
-            <div>
-              <label>What do you LOVE doing?</label>
-              <textarea id="ikigaiLove" rows="3" placeholder="E.g., Building products, Teaching, Creating content..."></textarea>
-            </div>
-            <div>
-              <label>What are you GOOD AT?</label>
-              <textarea id="ikigaiGoodAt" rows="3" placeholder="E.g., Marketing, Coding, Design, Sales..."></textarea>
-            </div>
-            <div>
-              <label>What does the WORLD NEED?</label>
-              <textarea id="ikigaiWorldNeeds" rows="3" placeholder="E.g., Better education, Sustainable solutions..."></textarea>
-            </div>
-            <div>
-              <label>What can you be PAID FOR?</label>
-              <textarea id="ikigaiPaidFor" rows="3" placeholder="E.g., Consulting, Product development..."></textarea>
-            </div>
+      <!-- Ikigai Section -->
+      <div class="profile-section">
+        <h3>Your Ikigai (Reason for Being)</h3>
+        <div class="ikigai-grid">
+          <div>
+            <label>What you LOVE</label>
+            <textarea id="ikigaiLove" rows="3" placeholder="What activities make you lose track of time?"></textarea>
+          </div>
+          <div>
+            <label>What you're GOOD AT</label>
+            <textarea id="ikigaiGoodAt" rows="3" placeholder="What skills come naturally to you?"></textarea>
+          </div>
+          <div>
+            <label>What the WORLD NEEDS</label>
+            <textarea id="ikigaiWorldNeeds" rows="3" placeholder="What problems do you want to solve?"></textarea>
+          </div>
+          <div>
+            <label>What you can be PAID FOR</label>
+            <textarea id="ikigaiPaidFor" rows="3" placeholder="What value can you provide?"></textarea>
           </div>
         </div>
+      </div>
 
-        <!-- Step 2: Basic Info -->
-        <div class="step">
-          <h3>2. Basic Information</h3>
+      <!-- CV Upload -->
+      <div class="profile-section">
+        <h3>Import from CV (Optional)</h3>
+        <div class="form-group">
+          <label>Upload CV/Resume</label>
+          <input type="file" id="cvUpload" accept=".pdf,.txt,.doc,.docx" onchange="handleCVUpload(event)">
+          <p id="uploadText" style="font-size: 0.9em; color: #666; margin-top: 5px;">
+            Supports PDF, TXT, DOC files. AI will extract your skills automatically.
+          </p>
+        </div>
+      </div>
+
+      <!-- Basic Info -->
+      <div class="profile-section">
+        <h3>Basic Information</h3>
+        <div class="form-group">
           <label>Primary Intent</label>
           <select id="intent">
-            <option value="">Select your intent...</option>
             <option value="seeking_cofounder">Seeking Cofounder</option>
             <option value="seeking_client">Seeking Client</option>
             <option value="seeking_teammate">Seeking Teammate</option>
             <option value="offering_services">Offering Services</option>
           </select>
-
+        </div>
+        <div class="form-group">
           <label>Skills (comma-separated)</label>
-          <input type="text" id="skills" placeholder="E.g., JavaScript, Marketing, AI, Design">
-
+          <input type="text" id="skills" placeholder="e.g., JavaScript, Marketing, AI, Design">
+        </div>
+        <div class="form-group">
           <label>Location</label>
-          <input type="text" id="location" placeholder="City, Country">
-
+          <input type="text" id="location" placeholder="e.g., San Francisco, CA">
+        </div>
+        <div class="form-group">
           <label>Availability</label>
           <select id="availability">
             <option value="full_time">Full-time</option>
@@ -69,7 +83,8 @@
             <option value="weekends">Weekends only</option>
             <option value="flexible">Flexible</option>
           </select>
-
+        </div>
+        <div class="form-group">
           <label>Working Style</label>
           <select id="workingStyle">
             <option value="remote">Remote</option>
@@ -77,38 +92,32 @@
             <option value="hybrid">Hybrid</option>
           </select>
         </div>
+      </div>
 
-        <!-- Step 3: Portfolio & Social -->
-        <div class="step">
-          <h3>3. Portfolio & Social Profiles (Optional)</h3>
-          <label>Portfolio/Website URL</label>
-          <input type="text" id="portfolioUrl" placeholder="https://your-portfolio.com">
-
+      <!-- Social Profiles -->
+      <div class="profile-section">
+        <h3>Portfolio & Social Profiles</h3>
+        <div class="form-group">
+          <label>Portfolio/Website</label>
+          <input type="text" id="portfolioUrl" placeholder="https://yourportfolio.com">
+        </div>
+        <div class="form-group">
           <label>LinkedIn</label>
           <input type="text" id="linkedin" placeholder="https://linkedin.com/in/yourprofile">
-
+        </div>
+        <div class="form-group">
           <label>Twitter/X</label>
           <input type="text" id="twitter" placeholder="https://twitter.com/yourhandle">
-
+        </div>
+        <div class="form-group">
           <label>GitHub</label>
           <input type="text" id="github" placeholder="https://github.com/yourusername">
         </div>
-
-        <!-- Step 4: CV Upload -->
-        <div class="step">
-          <h3>4. Upload CV/Resume (Optional but recommended)</h3>
-          <div class="file-upload" onclick="document.getElementById('cvFile').click()">
-            <input type="file" id="cvFile" accept=".pdf,.doc,.docx" onchange="handleCVUpload(event)">
-            <p id="uploadText">📄 Click to upload your CV (PDF, DOC, DOCX)</p>
-          </div>
-          <p style="color: #666; font-size: 0.9em; margin-top: 10px;">
-            AI will extract additional information from your CV to improve matching
-          </p>
-        </div>
-
       </div>
 
-      <button onclick="saveProfile()" class="btn-primary">Complete Profile & Start Matching</button>
+      <!-- Submit Button -->
+      <button class="btn-primary" onclick="saveProfile()">Complete Profile & Start Matching</button>
+      
       <p class="error-msg" id="errorMsg"></p>
       <p class="success-msg" id="successMsg"></p>
     </div>
