@@ -1,7 +1,3 @@
-// Initialize Supabase
-const { createClient } = supabase;
-const supabaseClient = createClient(CONFIG.supabase.url, CONFIG.supabase.anonKey);
-
 let currentUser = null;
 
 // Initialize
@@ -50,8 +46,8 @@ function loadProfileData() {
   document.getElementById('workingStyle').value = currentUser.working_style || 'remote';
 
   // Social profiles
+  document.getElementById('portfolioUrl').value = currentUser.portfolio_url || '';
   if (currentUser.social_profiles) {
-    document.getElementById('portfolioUrl').value = currentUser.portfolio_url || '';
     document.getElementById('linkedin').value = currentUser.social_profiles.linkedin || '';
     document.getElementById('twitter').value = currentUser.social_profiles.twitter || '';
     document.getElementById('github').value = currentUser.social_profiles.github || '';
@@ -154,7 +150,8 @@ async function regenerateCriteria() {
       paid_for: document.getElementById('ikigaiPaidFor').value
     };
 
-    const skills = document.getElementById('skills').value.split(',').map(s => s.trim());
+    const skillsInput = document.getElementById('skills').value;
+    const skills = skillsInput ? skillsInput.split(',').map(s => s.trim()).filter(s => s.length > 0) : [];
     const intent = document.getElementById('intent').value;
     const workingStyle = document.getElementById('workingStyle').value;
 
@@ -215,7 +212,9 @@ async function saveProfile() {
     };
 
     const skillsInput = document.getElementById('skills').value;
-    const skills = skillsInput ? skillsInput.split(',').map(s => s.trim()) : [];
+    const skills = skillsInput ? skillsInput.split(',').map(s => s.trim()).filter(s => s.length > 0) : [];
+
+    const portfolioUrl = document.getElementById('portfolioUrl').value;
 
     const socialProfiles = {
       linkedin: document.getElementById('linkedin').value,
@@ -234,19 +233,33 @@ async function saveProfile() {
         intent: document.getElementById('intent').value,
         availability: document.getElementById('availability').value,
         working_style: document.getElementById('workingStyle').value,
-        portfolio_url: document.getElementById('portfolioUrl').value,
+        portfolio_url: portfolioUrl,
         social_profiles: socialProfiles,
         updated_at: new Date().toISOString()
       })
       .eq('id', currentUser.id);
 
-    if (error) throw error;
+    if (error) {
+      console.error('Update error:', error);
+      throw error;
+    }
+
+    // Update currentUser object
+    currentUser.name = document.getElementById('name').value;
+    currentUser.location = document.getElementById('location').value;
+    currentUser.ikigai = ikigai;
+    currentUser.skills = skills;
+    currentUser.intent = document.getElementById('intent').value;
+    currentUser.availability = document.getElementById('availability').value;
+    currentUser.working_style = document.getElementById('workingStyle').value;
+    currentUser.portfolio_url = portfolioUrl;
+    currentUser.social_profiles = socialProfiles;
 
     successEl.textContent = '✅ Profile saved successfully!';
     
     setTimeout(() => {
-      window.location.href = 'search.html';
-    }, 1500);
+      successEl.textContent = '';
+    }, 2000);
   } catch (error) {
     console.error('Save error:', error);
     errorEl.textContent = 'Error saving profile: ' + error.message;
