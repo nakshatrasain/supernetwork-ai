@@ -158,46 +158,29 @@ async function regenerateCriteria() {
     const intent = document.getElementById('intent').value;
     const workingStyle = document.getElementById('workingStyle').value;
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    // Call our API endpoint
+    const response = await fetch('/api/generate-criteria', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': CONFIG.claude.apiKey,
-        'anthropic-version': '2023-06-01'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: CONFIG.claude.model,
-        max_tokens: 1500,
-        messages: [{
-          role: 'user',
-          content: `Based on this person's profile, suggest ideal matching criteria for finding cofounders, teammates, or clients. Return ONLY valid JSON:
-{
-  "ideal_skills": ["skill1", "skill2", "skill3"],
-  "ideal_traits": ["trait1", "trait2", "trait3"],
-  "complementary_strengths": ["strength1", "strength2", "strength3"],
-  "matching_preferences": "1-2 sentence description of ideal match characteristics"
-}
-
-Profile:
-Ikigai: ${JSON.stringify(ikigai)}
-Skills: ${skills.join(', ')}
-Intent: ${intent}
-Working Style: ${workingStyle}`
-        }]
+        ikigai: ikigai,
+        skills: skills,
+        intent: intent,
+        workingStyle: workingStyle
       })
     });
 
-    const data = await response.json();
-    const jsonMatch = data.content[0].text.match(/\{[\s\S]*\}/);
+    const result = await response.json();
     
-    if (jsonMatch) {
-      const criteria = JSON.parse(jsonMatch[0]);
-      currentUser.matching_criteria = criteria;
+    if (result.success && result.data) {
+      currentUser.matching_criteria = result.data;
       
       // Save to database
       await supabaseClient
         .from('profiles')
-        .update({ matching_criteria: criteria })
+        .update({ matching_criteria: result.data })
         .eq('id', currentUser.id);
       
       displayMatchingCriteria();
@@ -206,6 +189,8 @@ Working Style: ${workingStyle}`
       setTimeout(() => {
         document.getElementById('successMsg').textContent = '';
       }, 3000);
+    } else {
+      container.innerHTML = '<p style="color: #e74c3c;">Error generating criteria. Please try again.</p>';
     }
   } catch (error) {
     console.error('Criteria regeneration error:', error);
