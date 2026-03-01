@@ -5,10 +5,26 @@ async function handleCVUpload(event) {
   const file = event.target.files[0];
   if (!file) return;
 
-  document.getElementById('uploadText').textContent = '⏳ Processing CV with AI...';
+  document.getElementById('uploadText').textContent = '⏳ Reading file...';
 
   try {
-    const text = await extractTextFromFile(file);
+    let text = '';
+    
+    // Check file type
+    if (file.type === 'application/pdf') {
+      // Parse PDF
+      text = await extractTextFromPDF(file);
+    } else {
+      // Parse text files
+      text = await extractTextFromFile(file);
+    }
+
+    if (!text || text.trim().length === 0) {
+      document.getElementById('uploadText').textContent = '❌ Could not extract text from file. Please try a different format.';
+      return;
+    }
+
+    document.getElementById('uploadText').textContent = '⏳ Processing CV with AI...';
     
     // Call our API endpoint instead of Claude directly
     const response = await fetch('/api/parse-cv', {
@@ -17,7 +33,7 @@ async function handleCVUpload(event) {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        cvText: text
+        cvText: text.substring(0, 8000) // Limit to 8000 chars
       })
     });
 
@@ -36,22 +52,50 @@ async function handleCVUpload(event) {
       
       document.getElementById('uploadText').textContent = '✅ CV processed! Information extracted.';
     } else {
-      document.getElementById('uploadText').textContent = '❌ Error processing CV. You can still continue manually.';
+      document.getElementById('uploadText').textContent = '⚠️ ' + (result.error || 'Could not parse CV. Please fill manually.');
     }
   } catch (error) {
     console.error('CV processing error:', error);
-    document.getElementById('uploadText').textContent = '❌ Error processing CV. You can still continue manually.';
+    document.getElementById('uploadText').textContent = '❌ Error processing CV: ' + error.message;
   }
 }
 
-// Extract text from file
+// Extract text from PDF using PDF.js
+async function extractTextFromPDF(file) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      
+      // Load PDF.js
+      const pdfjsLib = window['pdfjs-dist/build/pdf'];
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      let fullText = '';
+      
+      // Extract text from each page
+      for (let i = 1; i <= Math.min(pdf.numPages, 5); i++) { // Limit to first 5 pages
+        const page = await pdf.getPage(i);
+        const textContent = await page.getTextContent();
+        const pageText = textContent.items.map(item => item.str).join(' ');
+        fullText += pageText + '\n';
+      }
+      
+      resolve(fullText);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+// Extract text from text files
 async function extractTextFromFile(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = (e) => {
       resolve(e.target.result);
     };
-    reader.onerror = reject;
+    reader.onerror = () => reject(new Error('Failed to read file'));
     reader.readAsText(file);
   });
 }
